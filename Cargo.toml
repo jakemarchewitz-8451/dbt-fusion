@@ -38,6 +38,11 @@ members = [
   "crates/dbt-test-utils",
   "crates/dbt-sample",
 
+  "crates/dbt-sql/dbt-lexer-bigquery",
+  "crates/dbt-sql/dbt-lexer-databricks",
+  "crates/dbt-sql/dbt-lexer-redshift",
+  "crates/dbt-sql/dbt-lexer-snowflake",
+  "crates/dbt-sql/dbt-lexer-trino",
 ]
 
 resolver = "2"
@@ -166,6 +171,11 @@ proto-rust-macros = { path = "crates/proto-rust-macros" }
 vortex-client = { path = "crates/vortex-client" }
 vortex-events = { path = "crates/vortex-events" }
 
+dbt-lexer-bigquery = { path = "crates/dbt-sql/dbt-lexer-bigquery" }
+dbt-lexer-databricks = { path = "crates/dbt-sql/dbt-lexer-databricks" }
+dbt-lexer-redshift = { path = "crates/dbt-sql/dbt-lexer-redshift" }
+dbt-lexer-snowflake = { path = "crates/dbt-sql/dbt-lexer-snowflake" }
+dbt-lexer-trino = { path = "crates/dbt-sql/dbt-lexer-trino" }
 
 # jinja dependencies
 minijinja-typecheck-builtins = { path = "crates/minijinja-typecheck-builtins" }
