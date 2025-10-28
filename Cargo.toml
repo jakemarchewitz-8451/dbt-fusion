@@ -25,6 +25,7 @@ members = [
   "crates/dbt-proc-macros",
 
   "crates/dbt-fusion-adapter",
+  "crates/dbt-fusion-py",
   "crates/dbt-ident",
   "crates/dbt-jinja-utils",
   "crates/dbt-sa-cli",
@@ -165,6 +166,7 @@ dbt-parser = { path = "crates/dbt-parser" }
 dbt-proc-macros = { path = "crates/dbt-proc-macros" }
 
 dbt-sample = { path = "crates/dbt-sample" }
+dbt-sa-cli = { path = "crates/dbt-sa-cli" }
 dbt-schemas = { path = "crates/dbt-schemas" }
 dbt-selector-parser = { path = "crates/dbt-selector-parser" }
 dbt-telemetry = { path = "crates/dbt-telemetry" }

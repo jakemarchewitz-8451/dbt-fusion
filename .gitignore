@@ -34,3 +34,7 @@ scratch/
 
 #redis
 dump.rdb
+
+# Python venv
+venv
+.venv
