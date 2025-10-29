@@ -1462,6 +1462,8 @@ dependencies = [
 name = "dbt-fusion-py"
 version = "2.0.0-preview.49"
 dependencies = [
+ "clap",
+ "dbt-common",
  "dbt-sa-cli",
  "pyo3",
 ]

@@ -18,5 +18,8 @@ crate-type = ["cdylib"]
 workspace = true
 
 [dependencies]
-pyo3 = "0.25.0"
+dbt-common = { workspace = true }
 dbt-sa-cli = { workspace = true }
+
+clap = { workspace = true, features = ["derive"] }
+pyo3 = "0.25.0"
