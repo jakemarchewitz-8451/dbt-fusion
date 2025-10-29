@@ -45,7 +45,6 @@ use serde_json::to_string_pretty;
 
 // JAKE:
 use std::io::{self, Write};
-use std::process::ExitCode;
 
 // Vars
 const FS_DEFAULT_STACK_SIZE: usize = 8 * 1024 * 1024;
@@ -272,7 +271,7 @@ async fn execute_all_phases(
 }
 
 
-pub fn run_with_args(cli: Cli, token: CancellationToken) -> ExitCode {
+pub fn run_with_args(cli: Cli, token: CancellationToken) -> u8 {
     let arg = from_main(&cli);
 
     // Init tracing
@@ -363,12 +362,12 @@ pub fn run_with_args(cli: Cli, token: CancellationToken) -> ExitCode {
             // If exec succeeds, exit with status 0 or 1
             // for 1 it is assumed that the  error was already printed)
             assert!(code == 0 || code == 1);
-            ExitCode::from(code as u8)
+            return code as u8;
         }
         Err(_err) => {
             // If any step fails, assume error is already printed, just exit with a status 1
             // show_progress_exit!(arg, start);
-            ExitCode::from(1)
+            return 1;
         }
     }
 }

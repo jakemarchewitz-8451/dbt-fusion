@@ -1,21 +1,23 @@
 use clap::Parser;
 use clap::error::ErrorKind;
 use pyo3::prelude::*;
-use pyo3::exceptions::PyTypeError;
+use pyo3::exceptions::{PySystemExit, PyTypeError, PyValueError};
 use dbt_sa_lib::dbt_sa_lib::{run_with_args, print_trimmed_error};
 use dbt_sa_lib::dbt_sa_clap::Cli;
 use pyo3::types::{PyList, PyString};
 use dbt_common::cancellation::CancellationTokenSource;
-use std::process::ExitCode;
 
 
 // JAKE: `import dbt_fusion; dbt_fusion.invoke(["dbt", "deps", "--project-dir", "/Users/j293015/Repos/insightsos-dbt"])`
 
 /// Invoke dbt
 #[pyfunction]
-fn invoke(args: &Bound<'_, PyList>) -> PyResult<String>
+fn invoke(args: &Bound<'_, PyList>) -> PyResult<()>
 {
     let mut str_args: Vec<String> = Vec::new();
+
+    // We are responsible for adding the dbt command at the beginning for the parser
+    str_args.push("dbt".to_owned());
 
     // Validate all items pass into list are strings
     for (idx, item) in args.iter().enumerate() {
@@ -25,6 +27,13 @@ fn invoke(args: &Bound<'_, PyList>) -> PyResult<String>
         }
 
         let s = item.extract::<String>()?;
+
+        // Prevent users from adding the dbt command itself, we handle that
+        if idx == 0 && s.trim() == "dbt" {
+            let err_str = "invoke() should only recieve subcommands and arguments for the dbt CLI command, don't pass in `dbt` at the beginning - e.g. [\"init\"], not [\"dbt\", \"init\"]";
+            return Err(PyValueError::new_err(err_str));
+        }
+
         str_args.push(s);
     }
     
@@ -48,9 +57,14 @@ fn invoke(args: &Bound<'_, PyList>) -> PyResult<String>
         }
     };
 
-    let exit_code = run_with_args(cli, token);
+    let status_code = run_with_args(cli, token);
 
-    Ok("Success!".to_owned())
+    if status_code != 0 {
+        // JAKE: is PySystemExit the right exception type?
+        return Err(PySystemExit::new_err(format!("dbt exited with code {}.", status_code)));
+    }
+
+    Ok(())
 }
 
 /// A Python module implemented in Rust.
