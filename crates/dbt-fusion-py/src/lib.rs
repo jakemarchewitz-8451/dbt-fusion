@@ -8,6 +8,9 @@ use pyo3::types::{PyList, PyString};
 use dbt_common::cancellation::CancellationTokenSource;
 use std::process::ExitCode;
 
+
+// JAKE: `import dbt_fusion; dbt_fusion.invoke(["dbt", "deps", "--project-dir", "/Users/j293015/Repos/insightsos-dbt"])`
+
 /// Invoke dbt
 #[pyfunction]
 fn invoke(args: &Bound<'_, PyList>) -> PyResult<String>
