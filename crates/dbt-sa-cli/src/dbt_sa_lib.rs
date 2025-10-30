@@ -17,7 +17,7 @@ use dbt_schemas::man::execute_man_command;
 use dbt_common::io_args::EvalArgs;
 use dbt_common::{
     ErrorCode, FsResult, checkpoint_maybe_exit,
-    constants::{DBT_MANIFEST_JSON, INSTALLING, PANIC, VALIDATING},
+    constants::{DBT_MANIFEST_JSON, INSTALLING, ERROR, PANIC, VALIDATING},
     fs_err, fsinfo,
     io_args::{Phases, SystemArgs},
     logging::init_logger,
@@ -349,7 +349,8 @@ pub fn run_with_args(cli: Cli, token: CancellationToken) -> u8 {
     let result = tokio_rt.block_on(async { tokio_rt.spawn(future).await.unwrap() });
 
     // Shut down telemetry
-    for err in telemetry_handle.shutdown() {
+    let errors_from_telemetry = telemetry_handle.shutdown();
+    for err in &errors_from_telemetry {
         eprintln!("{}", err.pretty());
     }
 
@@ -364,7 +365,12 @@ pub fn run_with_args(cli: Cli, token: CancellationToken) -> u8 {
             assert!(code == 0 || code == 1);
             return code as u8;
         }
-        Err(_err) => {
+        Err(err) => {
+            // Make sure error gets printed
+            if errors_from_telemetry.is_empty() {
+                eprintln!("{} {}", RED.apply_to(ERROR), err.pretty());
+            }
+
             // If any step fails, assume error is already printed, just exit with a status 1
             // show_progress_exit!(arg, start);
             return 1;

@@ -16,11 +16,11 @@ fn invoke(args: &Bound<'_, PyList>) -> PyResult<()>
 {
     let mut str_args: Vec<String> = Vec::new();
 
-    // We are responsible for adding the dbt command at the beginning for the parser
+    // We are responsible for adding the dbt command at the beginning to make parsing work correctly
     str_args.push("dbt".to_owned());
 
-    // Validate all items pass into list are strings
     for (idx, item) in args.iter().enumerate() {
+        // Validate all items passed into list are strings
         if !item.is_instance_of::<PyString>() {
             let err_str = format!("invoke() must recieve a list of strings. The object at position {} in the list is not a string.", idx);
             return Err(PyTypeError::new_err(err_str));
