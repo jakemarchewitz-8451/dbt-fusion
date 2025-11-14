@@ -30,7 +30,6 @@ fn main() -> ExitCode {
         }
     };
 
-    // JAKE: return and convert to exit code
     let status= run_with_args(cli, token);
 
     ExitCode::from(status)
